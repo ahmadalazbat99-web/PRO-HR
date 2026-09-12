@@ -1,0 +1,1 @@
+const fs=require('fs');const path=require('path');for(const f of ['main.js','preload.js']){new Function(fs.readFileSync(path.join(__dirname,'..',f),'utf8'));console.log(f,'OK')}console.log('package.json OK');

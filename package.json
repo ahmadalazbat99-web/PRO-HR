@@ -1,0 +1,54 @@
+{
+  "name": "hr-pro-jordan",
+  "version": "1.4.1",
+  "description": "HR PRO Jordan — production hardening release",
+  "main": "main.js",
+  "author": "Ahmad Alazbat",
+  "license": "UNLICENSED",
+  "scripts": {
+    "start": "electron .",
+    "dist": "electron-builder",
+    "dist:dir": "electron-builder --win --dir",
+    "pack": "electron-builder --dir",
+    "lint:syntax": "node --check main.js",
+    "security:check": "node scripts/security-check.js",
+    "qa": "node scripts/qa.js && node scripts/security-check.js"
+  },
+  "devDependencies": {
+    "electron": "^38.1.0",
+    "electron-builder": "^26.0.12"
+  },
+  "dependencies": {
+    "sql.js": "^1.13.0"
+  },
+  "build": {
+    "appId": "com.hrpro.jordan",
+    "productName": "HR PRO Jordan",
+    "directories": {
+      "output": "dist"
+    },
+    "files": [
+      "**/*",
+      "!dist/**"
+    ],
+    "win": {
+      "target": [
+        {
+          "target": "nsis",
+          "arch": [
+            "x64"
+          ]
+        }
+      ],
+      "artifactName": "HR-PRO-Jordan-Setup-${version}.${ext}"
+    },
+    "nsis": {
+      "oneClick": false,
+      "perMachine": true,
+      "allowToChangeInstallationDirectory": true,
+      "createDesktopShortcut": true,
+      "createStartMenuShortcut": true
+    },
+    "artifactName": "HR-PRO-Jordan-Setup-${version}.${ext}"
+  }
+}
