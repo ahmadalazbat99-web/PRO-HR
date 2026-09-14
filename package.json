@@ -6,13 +6,19 @@
   "author": "Ahmad Alazbat",
   "license": "UNLICENSED",
   "scripts": {
+    "postinstall": "node scripts/patch-nsis-linux.cjs",
     "start": "electron .",
     "dist": "electron-builder",
     "dist:dir": "electron-builder --win --dir",
     "pack": "electron-builder --dir",
-    "lint:syntax": "node --check main.js",
+    "lint:syntax": "node --check main.js && node --check preload.js",
+    "icon": "node scripts/generate-icon.cjs",
     "security:check": "node scripts/security-check.js",
-    "qa": "node scripts/qa.js && node scripts/security-check.js"
+    "test:smoke": "node scripts/phase1-smoke.cjs",
+    "test:payroll": "node scripts/payroll-tests.cjs",
+    "test:phase37": "node scripts/phase37-tests.cjs",
+    "test": "node scripts/phase1-smoke.cjs && node scripts/payroll-tests.cjs && node scripts/phase37-tests.cjs",
+    "qa": "node scripts/check.js && node scripts/qa.js && node scripts/security-check.js && node scripts/phase1-smoke.cjs && node scripts/payroll-tests.cjs && node scripts/phase37-tests.cjs"
   },
   "devDependencies": {
     "electron": "^38.1.0",
@@ -32,6 +38,7 @@
       "!dist/**"
     ],
     "win": {
+      "icon": "build/icon.ico",
       "target": [
         {
           "target": "nsis",
