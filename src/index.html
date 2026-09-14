@@ -112,9 +112,9 @@ button{cursor:pointer}
 <header class="topbar">
   <div class="topbar-left"><div class="crumb">HR PRO / <span id="crumb">لوحة التحكم</span></div><div class="page-title" id="topTitle">منظومة الموارد البشرية</div></div>
   <span id="showcaseBadge" class="showcase-badge">● 1.4.1 COMMERCIAL</span><div class="top-actions">
-    <button class="icon-btn" title="الإشعارات" onclick="toast('لديك 6 إشعارات جديدة')">🔔<span class="notif-dot"></span></button>
+    <button class="icon-btn" id="notifBell" title="الإشعارات">🔔<span class="notif-dot"></span></button>
     <button class="icon-btn" title="طباعة" onclick="window.print()">🖨</button>
-    <div class="profile"><div class="avatar">أ</div><span><strong>المدير العام</strong><br><small class="muted">Super Admin</small></span></div>
+    <div class="profile"><div class="avatar">أ</div><span><strong>المدير العام</strong><br><small class="muted">Super Admin</small></span></div><button class="icon-btn" id="logoutBtn" title="تسجيل الخروج">⏻</button>
   </div>
 </header>
 
@@ -137,11 +137,11 @@ button{cursor:pointer}
     </div>
   </div>
   <div class="metrics">
-    <div class="metric"><div class="label">إجمالي الموظفين</div><div class="num">248</div><div class="trend up">↑ 6 هذا الشهر</div></div>
-    <div class="metric"><div class="label">حاضر اليوم</div><div class="num">231</div><div class="trend up">93.1% حضور</div></div>
-    <div class="metric"><div class="label">مسير الرواتب</div><div class="num">86,420</div><div class="trend">د.أ — سبتمبر 2026</div></div>
-    <div class="metric"><div class="label">طلبات معلقة</div><div class="num">14</div><div class="trend attention">تحتاج موافقة</div></div>
-    <div class="metric"><div class="label">عقود تقترب من الانتهاء</div><div class="num">8</div><div class="trend attention">خلال 30 يومًا</div></div>
+    <div class="metric"><div class="label">إجمالي الموظفين</div><div class="num" id="mEmployees">—</div><div class="trend up">من قاعدة البيانات</div></div>
+    <div class="metric"><div class="label">على رأس العمل</div><div class="num" id="mActive">—</div><div class="trend up">حالة active</div></div>
+    <div class="metric"><div class="label">مسير الرواتب الأخير</div><div class="num" id="mPayroll">—</div><div class="trend" id="mPayrollPeriod">د.أ</div></div>
+    <div class="metric"><div class="label">طلبات إجازة معلقة</div><div class="num" id="mPending">—</div><div class="trend attention">تحتاج موافقة</div></div>
+    <div class="metric"><div class="label">عقود تقترب من الانتهاء</div><div class="num" id="mContracts">—</div><div class="trend attention">خلال 30 يومًا</div></div>
   </div>
   <div class="layout">
     <div class="panel"><div class="panel-head"><h3>آخر المعاملات</h3><span class="muted">اليوم</span></div>
@@ -175,7 +175,7 @@ button{cursor:pointer}
 
 <section id="attendance" class="page"><div class="section-title">الحضور والانصراف</div><div class="section-sub">وردّيات، بصمة، تأخير، غياب، إضافي، خروج مبكر.</div>
   <div class="metrics"><div class="metric"><div class="label">حاضر</div><div class="num">231</div></div><div class="metric"><div class="label">غياب</div><div class="num">7</div></div><div class="metric"><div class="label">تأخير</div><div class="num">10</div></div><div class="metric"><div class="label">إضافي</div><div class="num">184h</div></div><div class="metric"><div class="label">مغادرات اليوم</div><div class="num">12</div></div></div>
-  <div class="panel" style="margin-top:15px"><div class="quick"><button onclick="openModal('اختبار جهاز البصمة','أدخل عنوان IP والمنفذ لاختبار اتصال TCP الفعلي بالجهاز.')">⌁ اختبار جهاز البصمة</button><button onclick="go('settings')">＋ إعداد وردية</button><button onclick="go('attendance')">✓ تسوية حضور</button><button onclick="go('payroll')">↯ احتساب الإضافي ضمن المسير</button></div></div>
+  <div class="panel" style="margin-top:15px"><div class="quick"><button id="fpTestBtn">⌁ اختبار اتصال جهاز حضور (TCP فقط)</button><button onclick="go('settings')">＋ إعداد وردية</button><button onclick="go('attendance')">✓ تسوية حضور</button><button onclick="go('payroll')">↯ احتساب الإضافي ضمن المسير</button></div></div>
 </section>
 
 <section id="leaves" class="page"><div class="section-title">الإجازات والمغادرات</div><div class="section-sub">محرك أرصدة واستحقاقات وموافقات قابل للتهيئة.</div>
@@ -196,7 +196,7 @@ button{cursor:pointer}
 
 <section id="reports" class="page"><div class="section-title">التقارير والطباعة</div><div class="section-sub">تقارير PDF والطباعة مع ترويسة، تذييل، رقم صفحة، علامة مائية وشعار.</div><div class="panel"><div class="quick"><button onclick="window.print()">🖨 طباعة مباشرة</button><button onclick="openModal('قالب الطباعة','تخصيص شعار وترويسة علوية وسفلية، العلامة المائية، نوع الخط، حجم الخط، اتجاه الصفحة، رقم الصفحة ومعلومات الشركة.')">⚙ قالب الطباعة</button><button id="reportPdfBtn">PDF</button><button id="reportExcelBtn">Excel</button></div></div></section>
 
-<section id="portal" class="page"><div class="section-title">بوابة الموظف</div><div class="section-sub">تجربة الخدمة الذاتية: راتب، إجازات، حضور، سلف، طلبات وموافقات.</div><div class="layout"><div class="panel"><h3>دخول الموظف</h3><div class="form-grid"><div class="field"><label>رقم الموظف</label><input id="portalEmployeeNo" placeholder="رقم الموظف"></div><div class="field"><label>كلمة المرور</label><input id="portalPassword" type="password" autocomplete="current-password" placeholder="كلمة المرور"></div><div class="field" style="display:flex;align-items:end"><button class="btn primary" style="width:100%" id="portalLoginBtn">دخول</button></div></div></div><div class="panel"><h3>الخدمات</h3><div class="quick"><button>كشف الراتب</button><button>رصيد الإجازات</button><button>طلب إجازة</button><button>طلب مغادرة</button><button>طلب سلفة</button><button>تعديل بياناتي</button></div></div></div></section>
+<section id="portal" class="page"><div class="section-title">بوابة الموظف</div><div class="section-sub">تجربة الخدمة الذاتية: راتبي، إجازاتي، حضوري، وثائقي، سلفي — البيانات محصورة بسجل الموظف المسجّل.</div><div class="layout"><div class="panel"><h3>دخول الموظف</h3><div class="form-grid"><div class="field"><label>رقم الموظف</label><input id="portalEmployeeNo" placeholder="رقم الموظف"></div><div class="field"><label>كلمة المرور</label><input id="portalPassword" type="password" autocomplete="current-password" placeholder="كلمة المرور"></div><div class="field" style="display:flex;align-items:end"><button class="btn primary" style="width:100%" id="portalLoginBtn">دخول</button></div></div><div id="portalInfo" class="muted" style="margin-top:8px"></div></div><div class="panel" id="portalPanel" style="display:none"><h3 id="portalName">خدماتي</h3><div class="quick"><button id="portalSlipsBtn">كشف رواتبي</button><button id="portalLeaveBalBtn">أرصدة إجازاتي</button><button id="portalLeaveReqBtn">طلب إجازة</button><button id="portalMyLeaveBtn">طلباتي وسجلّها</button><button id="portalMyAttBtn">حضوري</button><button id="portalMyDocsBtn">وثائقي</button><button id="portalMyLoansBtn">سلفي</button><button id="portalPassBtn">تغيير كلمة المرور</button></div><div id="portalData" style="margin-top:12px"></div></div></div></section>
 
 <section id="permissions" class="page"><div class="section-title">الصلاحيات والمستخدمون</div><div class="section-sub">RBAC فعلي: المستخدم ← الدور ← الصلاحيات، مع تفعيل وتعطيل الحسابات وتعديل صلاحيات كل وحدة.</div><div class="layout"><div class="panel"><div class="panel-head"><h3>المستخدمون</h3><button class="btn primary" id="addUserBtn">＋ مستخدم</button></div><div id="usersList" class="activity"></div></div><div class="panel"><div class="panel-head"><h3>الأدوار</h3><span class="muted">اختر دورًا</span></div><div id="rolesList" class="roles"></div></div></div><div class="panel" style="margin-top:15px"><div class="panel-head"><h3>صلاحيات الدور المحدد</h3><button class="btn gold" id="savePermBtn">حفظ الصلاحيات</button></div><div id="permEditor" class="perm-grid"></div></div></section>
 
@@ -213,7 +213,7 @@ button{cursor:pointer}
 <div class="setting-card"><h4>الهوية والألوان</h4><p>شعار الشركة، اللون الأساسي، اللون الثانوي، خلفيات التقارير.</p><button class="btn" onclick="openModal('هوية البرنامج','يمكن تغيير الشعار والألوان من دون تعديل الكود.')">تخصيص الهوية</button></div>
 <div class="setting-card"><h4>الخطوط</h4><p>اسم الخط، حجم النص، أحجام العناوين، خط التقارير والطباعة.</p><select style="width:100%;padding:9px;border:1px solid var(--line);border-radius:9px"><option>Cairo</option><option>Tajawal</option><option>Segoe UI</option></select></div>
 <div class="setting-card"><h4>الإشعارات</h4><p>تنبيهات الطلبات، العقود، الوثائق، الرواتب والموافقات.</p><div class="switch-row"><span>تفعيل الإشعارات</span><label class="switch"><input type="checkbox" checked><span class="slider"></span></label></div><div class="switch-row"><span>صوت التنبيه</span><label class="switch"><input type="checkbox" checked><span class="slider"></span></label></div></div>
-<div class="setting-card"><h4>البصمة والحضور</h4><p>اختيار نوع الجهاز، الاتصال، مزامنة السجلات وقواعد المطابقة.</p><div class="switch-row"><span>دعم جهاز البصمة</span><label class="switch"><input type="checkbox"><span class="slider"></span></label></div><button class="btn" style="margin-top:12px" onclick="toast('فتح إعدادات جهاز البصمة')">إعداد الاتصال</button></div>
+<div class="setting-card"><h4>البصمة والحضور</h4><p>إدارة أجهزة الحضور وفحص الاتصال الشبكي. <strong>ملاحظة صريحة:</strong> مزامنة سجلات البصمة من الجهاز غير متاحة في هذا الإصدار وتتطلب تكامل SDK مع مزوّد الجهاز — يمكن حاليًا إضافة الأجهزة واختبار الاتصال واستيراد السجلات CSV.</p><div class="switch-row"><span>فحص الاتصال بالأجهزة</span><label class="switch"><input type="checkbox" checked><span class="slider"></span></label></div><button class="btn" style="margin-top:12px" id="fpDeviceMgmtBtn">إدارة الأجهزة</button></div>
 <div class="setting-card"><h4>الطابعات</h4><p>طابعة افتراضية، قياس الورق، هوامش، اتجاه وتقارير متعددة الصفحات.</p><button class="btn" onclick="openModal('إعدادات الطابعة','اختر إعدادات الطباعة الافتراضية واحفظها؛ تستخدمها التقارير والطباعة داخل البرنامج.')">إعداد الطباعة</button></div>
 <div class="setting-card"><h4>رأس وتذييل الصفحة</h4><p>ترويسة أعلى الصفحة، تذييل، رقم الصفحة، شعار، تاريخ وطابع الشركة.</p><button class="btn" onclick="openModal('تخصيص رأس وتذييل','ضع شعارًا يسارًا، اسم الشركة في الوسط، رقم الصفحة والتاريخ في التذييل، وأضف علامة مائية اختيارية.')">تخصيص القالب</button></div>
 <div class="setting-card"><h4>العلامة المائية</h4><p>نص أو شعار شفاف خلف المحتوى مع اختيار الشفافية والاتجاه.</p><div class="switch-row"><span>تفعيل العلامة المائية</span><label class="switch"><input type="checkbox" checked><span class="slider"></span></label></div></div>
@@ -295,7 +295,7 @@ button{cursor:pointer}
 const labels={
 dashboard:'لوحة التحكم',employees:'الموظفون',org:'الهيكل التنظيمي',attendance:'الحضور والانصراف',leaves:'الإجازات والمغادرات',payroll:'الرواتب',
 loans:'السلف والخصومات',discipline:'التقييم والانضباط',documents:'الوثائق والعقود',reports:'التقارير والطباعة',portal:'بوابة الموظف',
-permissions:'الصلاحيات والموافقات',legal:'التشريعات والقواعد',settings:'الإعدادات',audit:'سجل التدقيق',backup:'النسخ الاحتياطي'
+permissions:'الصلاحيات والموافقات',legal:'التشريعات والقواعد',settings:'الإعدادات',audit:'سجل التدقيق',backup:'النسخ الاحتياطي',hrp5:'التسويات والخصومات والسلف',hrp6:'التقارير والطباعة',hrp7:'التشريعات والقواعد',hrp8:'بوابة الموظف والموافقات',hrp9:'البيئة والشبكة والترخيص'
 };
 document.querySelectorAll('.nav button').forEach(btn=>{
   btn.addEventListener('click',()=>{
@@ -303,9 +303,12 @@ document.querySelectorAll('.nav button').forEach(btn=>{
     document.querySelectorAll('.page').forEach(x=>x.classList.remove('active'));
     btn.classList.add('active');
     const id=btn.dataset.page;
-    document.getElementById(id).classList.add('active');
-    document.getElementById('crumb').textContent=labels[id];
-    document.getElementById('topTitle').textContent=labels[id];
+    const section=document.getElementById(id);
+    if(!section){console.error('HR PRO NAV: missing section for page',id);toast('تعذر فتح الصفحة: '+id);return;}
+    section.classList.add('active');
+    section.style.display='';
+    document.getElementById('crumb').textContent=labels[id]||id;
+    document.getElementById('topTitle').textContent=labels[id]||id;
     window.scrollTo({top:0,behavior:'smooth'});
   });
 });
@@ -318,6 +321,7 @@ function closeModal(){document.getElementById('modalBackdrop').style.display='no
 document.getElementById('modalBackdrop').addEventListener('click',e=>{if(e.target.id==='modalBackdrop')closeModal()});
 
 const state={user:null, roleId:null, roles:[], permissions:[]};
+window.state=state;
 async function initAuth(){
   const loginGate=document.getElementById('loginGate');
   const error=document.getElementById('loginError');
@@ -394,7 +398,37 @@ async function loadRoles(){if(!window.hrpro?.roles)return;state.roles=await wind
 async function loadUsers(){const box=document.getElementById('usersList');if(!box)return;const users=await window.hrpro.users.list(state.user?.token);box.innerHTML='';users.forEach(u=>{const item=document.createElement('div');item.className='activity-item';const toggle=u.active?'تعطيل':'تفعيل';item.innerHTML=`<div class="activity-dot"></div><div style="flex:1"><strong>${u.username}</strong><div>${u.role||'بدون دور'} • ${u.active?'نشط':'متوقف'}</div></div><button class="btn" data-id="${u.id}" data-active="${u.active?'0':'1'}">${toggle}</button>`;item.querySelector('button').addEventListener('click',async()=>{await window.hrpro.users.toggle({token:state.user?.token,id:u.id,active:item.querySelector('button').dataset.active==='1'});loadUsers();toast('تم تحديث حالة المستخدم');});box.appendChild(item);});}
 async function loadPermissions(){const box=document.getElementById('permEditor');if(!box||!state.roleId)return;state.permissions=await window.hrpro.permissions.list(state.roleId,state.user?.token);const headers=['الوحدة','عرض','إضافة','تعديل','حذف','اعتماد','تصدير'];box.innerHTML=headers.map((h,i)=>`<div class="perm-head">${h}</div>`).join('');state.permissions.forEach(p=>{box.insertAdjacentHTML('beforeend',`<div>${p.module}</div>${['can_view','can_add','can_edit','can_delete','can_approve','can_export'].map(k=>`<div><input class="perm-check" type="checkbox" data-module="${p.module}" data-key="${k}" ${p[k]?'checked':''}></div>`).join('')}`);});}
 document.getElementById('savePermBtn')?.addEventListener('click',async()=>{if(!state.roleId)return;for(const module of [...new Set([...document.querySelectorAll('#permEditor [data-module]')].map(x=>x.dataset.module))]){const permissions={};document.querySelectorAll(`#permEditor [data-module="${module}"]`).forEach(x=>permissions[x.dataset.key]=x.checked);await window.hrpro.permissions.save({token:state.user?.token,roleId:state.roleId,module,permissions});}toast('تم حفظ صلاحيات الدور');});
-document.getElementById('addUserBtn')?.addEventListener('click',async()=>{const username=prompt('اسم المستخدم الجديد');if(!username)return;const password=prompt('كلمة المرور');if(!password)return;const roleName=prompt('اسم الدور (مثال: HR Manager)');const role=state.roles.find(r=>r.name===roleName)||state.roles[0];const r=await window.hrpro.users.add({token:state.user?.token,username,password,roleId:role.id});if(!r.ok)toast(r.message);else{loadUsers();toast('تم إنشاء المستخدم');}});
+document.getElementById('addUserBtn')?.addEventListener('click',async()=>{
+  try{
+    const m=document.getElementById('appModal'); if(!m)return;
+    let roles=state.roles&&state.roles.length?state.roles:await window.hrpro.roles.list(state.user&&state.user.token);
+    if(!roles||!roles.length){toast('لا توجد أدوار متاحة — أنشئ دورًا أولًا');return;}
+    state.roles=roles;
+    document.getElementById('appModalTitle').textContent='إضافة مستخدم جديد';
+    document.getElementById('appModalText').textContent='سيُنشأ المستخدم بكلمة مرور تلتزم سياسة الأمان (8 أحرف على الأقل مع رقم وحرف لاتيني).';
+    document.getElementById('appModalBody').innerHTML='<div class="action-form"><div class="full"><label>اسم المستخدم</label><input id="nuName" autocomplete="off"></div><div><label>كلمة المرور</label><input id="nuPass" type="password" autocomplete="new-password"></div><div><label>تأكيد كلمة المرور</label><input id="nuPass2" type="password" autocomplete="new-password"></div><div class="full"><label>الدور</label><select id="nuRole">'+roles.map(r=>'<option value="'+r.id+'">'+safe(r.name)+'</option>').join('')+'</select></div><div class="full"><label>ربط بموظف (اختياري — لبوابة الموظف)</label><input id="nuEmp" type="number" min="0" placeholder="معرّف الموظف"></div></div>';
+    const actions=m.querySelector('.modal-actions');
+    actions.innerHTML='<button class="btn primary" type="button" id="nuSave">إنشاء المستخدم</button><button class="btn" type="button" id="nuCancel">إلغاء</button>';
+    m.style.display='flex';
+    const close=()=>{m.style.display='none';};
+    document.getElementById('nuCancel').onclick=close;
+    document.getElementById('nuSave').onclick=async()=>{
+      try{
+        const username=document.getElementById('nuName').value.trim();
+        const password=document.getElementById('nuPass').value;
+        const password2=document.getElementById('nuPass2').value;
+        const roleId=Number(document.getElementById('nuRole').value);
+        const empRaw=document.getElementById('nuEmp').value.trim();
+        if(!username)throw new Error('أدخل اسم المستخدم');
+        if(password!==password2)throw new Error('كلمتا المرور غير متطابقتين');
+        if(!roleId)throw new Error('اختر دورًا للمستخدم');
+        const r=await window.hrpro.users.add({token:state.user&&state.user.token,username,password,roleId,employeeId:empRaw?Number(empRaw):null});
+        if(!r||!r.ok)throw new Error(r&&r.message||'تعذر إنشاء المستخدم');
+        close(); await loadUsers(); toast('تم إنشاء المستخدم بنجاح');
+      }catch(e){ toast(e.message||String(e)); }
+    };
+  }catch(e){ toast(e.message||String(e)); }
+});
 
 let employeeCache=[];
 async function loadEmployeeLookups(){
@@ -405,13 +439,13 @@ async function loadEmployeeLookups(){
 }
 function safe(v){return v==null?'':String(v).replace(/[&<>"']/g,m=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[m]));}
 function statusLabel(s){return s==='active'?['على رأس العمل','success']:s==='leave'?['إجازة','warn']:s==='suspended'?['موقوف','danger']:['منتهي الخدمة','accent'];}
-function renderEmployees(){const q=(document.getElementById('employeeSearch').value||'').trim().toLowerCase();const dep=document.getElementById('employeeDeptFilter').value;const rows=employeeCache.filter(e=>(!q||`${e.employee_no} ${e.full_name}`.toLowerCase().includes(q))&&(!dep||String(e.department_id)===String(dep)));const body=document.getElementById('employeesBody');body.innerHTML=rows.map(e=>{const [lab,cls]=statusLabel(e.status);return `<tr><td>${safe(e.employee_no)}</td><td><strong>${safe(e.full_name)}</strong><div class="muted">${safe(e.national_id||'')}</div></td><td>${safe(e.branch||'')}</td><td>${safe(e.department||'')}</td><td>${safe(e.job_title_name||e.job_title||'')}</td><td>${Number(e.basic_salary||0).toLocaleString('ar-JO',{minimumFractionDigits:2})} د.أ</td><td><span class="status ${cls}">${lab}</span></td><td><button class="btn" data-edit="${e.id}">فتح الملف</button> <button class="btn danger" data-delete="${e.id}">إيقاف</button></td></tr>`}).join('');body.querySelectorAll('[data-edit]').forEach(b=>b.addEventListener('click',()=>openEmployee(Number(b.dataset.edit))));body.querySelectorAll('[data-delete]').forEach(b=>b.addEventListener('click',async()=>{if(!confirm('سيتم إيقاف سجل الموظف بدل حذفه نهائيًا. هل تريد المتابعة؟'))return;try{const r=await window.hrpro.employees.delete({id:Number(b.dataset.delete),token:state.user?.token});if(!r?.ok)throw new Error(r?.message||'تعذر إيقاف الموظف');await loadEmployees();toast('تم إيقاف سجل الموظف');}catch(e){toast(e.message||'تعذر إيقاف الموظف');}}));}
+function renderEmployees(){const q=(document.getElementById('employeeSearch').value||'').trim().toLowerCase();const dep=document.getElementById('employeeDeptFilter').value;const rows=employeeCache.filter(e=>(!q||`${e.employee_no} ${e.full_name}`.toLowerCase().includes(q))&&(!dep||String(e.department_id)===String(dep)));const body=document.getElementById('employeesBody');body.innerHTML=rows.map(e=>{const [lab,cls]=statusLabel(e.status);return `<tr><td>${safe(e.employee_no)}</td><td><strong>${safe(e.full_name)}</strong><div class="muted">${safe(e.national_id||'')}</div></td><td>${safe(e.branch||'')}</td><td>${safe(e.department||'')}</td><td>${safe(e.job_title_name||e.job_title||'')}</td><td>${Number(e.basic_salary||0).toLocaleString('ar-JO',{minimumFractionDigits:2})} د.أ</td><td><span class="status ${cls}">${lab}</span></td><td><button class="btn" data-edit="${e.id}">فتح الملف</button> <button class="btn danger" data-delete="${e.id}">إيقاف</button></td></tr>`}).join('');body.querySelectorAll('[data-edit]').forEach(b=>b.addEventListener('click',()=>openEmployee(Number(b.dataset.edit))));body.querySelectorAll('[data-delete]').forEach(b=>b.addEventListener('click',async()=>{if(!window.confirm('سيتم إيقاف سجل الموظف بدل حذفه نهائيًا. هل تريد المتابعة؟'))return;try{const r=await window.hrpro.employees.delete({id:Number(b.dataset.delete),token:state.user?.token,confirm:true});if(!r?.ok)throw new Error(r?.message||'تعذر إيقاف الموظف');await loadEmployees();toast('تم إيقاف سجل الموظف');}catch(e){toast(e.message||'تعذر إيقاف الموظف');}}));}
 async function loadEmployees(){employeeCache=await window.hrpro.employees.list(state.user?.token);renderEmployees();}
 function setVal(id,v){const e=document.getElementById(id);if(e)e.value=v??'';}
 function openEmployee(id){const e=employeeCache.find(x=>x.id===id);if(!e)return;document.getElementById('employeeModalTitle').textContent='ملف الموظف — '+e.full_name;setVal('empId',e.id);[['empNo','employee_no'],['empName','full_name'],['empNationality','nationality'],['empNational','national_id'],['empGender','gender'],['empBirth','birth_date'],['empMarital','marital_status'],['empDependents','dependents'],['empPhone','phone'],['empEmail','email'],['empAddress','address'],['empEmergency','emergency_phone'],['empCompany','company_id'],['empBranch','branch_id'],['empDepartment','department_id'],['empJobTitle','job_title_id'],['empSSN','social_security_no'],['empIBAN','bank_iban'],['empHire','hire_date'],['empProbation','probation_end'],['empContract','contract_type'],['empContractEnd','contract_end'],['empSalary','basic_salary'],['empHousing','housing_allowance'],['empTransport','transport_allowance'],['empOtherAllowances','other_allowances'],['empStatus','status'],['empTerminationDate','termination_date'],['empTerminationReason','termination_reason']].forEach(([a,b])=>setVal(a,e[b]));document.getElementById('employeeModal').style.display='flex';}
 function newEmployee(){document.getElementById('employeeModalTitle').textContent='إضافة موظف جديد';document.getElementById('employeeForm').reset();setVal('empId','');setVal('empNationality','Jordanian');setVal('empDependents',0);setVal('empStatus','active');loadEmployeeLookups();document.getElementById('employeeModal').style.display='flex';}
 document.getElementById('newEmployeeBtn').addEventListener('click',newEmployee);document.getElementById('employeeCancelBtn').addEventListener('click',()=>document.getElementById('employeeModal').style.display='none');document.getElementById('employeeSearch').addEventListener('input',renderEmployees);document.getElementById('employeeDeptFilter').addEventListener('change',renderEmployees);
-document.getElementById('portalLoginBtn')?.addEventListener('click',async()=>{try{const r=await window.hrpro.portalLogin({employee_no:document.getElementById('portalEmployeeNo')?.value,password:document.getElementById('portalPassword')?.value});if(r?.ok){toast(`مرحبًا ${r.user.full_name}`);}else toast(r?.message||'تعذر تسجيل الدخول');}catch(e){toast(e.message||'تعذر تسجيل الدخول');}});
+document.getElementById('portalLoginBtn')?.addEventListener('click',async()=>{try{const r=await window.hrpro.portalLogin({employee_no:document.getElementById('portalEmployeeNo')?.value,password:document.getElementById('portalPassword')?.value});if(r?.ok){window.__HRPRO_PORTAL_TOKEN=r.token;toast(`مرحبًا ${r.user.full_name} — تم الدخول للبوابة`);const panel=document.getElementById('portalPanel');if(panel)panel.style.display='block';const nm=document.getElementById('portalName');if(nm)nm.textContent='خدماتي — '+r.user.full_name;const info=document.getElementById('portalInfo');if(info)info.textContent='جلسة موظف فعّالة. جميع البيانات المعروضة محصورة برقمك الوظيفي.';}else toast(r?.message||'تعذر تسجيل الدخول');}catch(e){toast(e.message||'تعذر تسجيل الدخول');}});
 document.getElementById('employeeImportBtn')?.addEventListener('click',async()=>{try{const r=await window.hrpro.employees.importCsv(state.user?.token);if(r?.ok){await loadEmployees();toast(`تم استيراد ${r.imported} موظف وتحديث ${r.updated} موظف؛ أخطاء: ${r.errors}`);}else if(!r?.canceled)toast(r?.message||'تعذر الاستيراد');}catch(e){toast(e.message||'تعذر الاستيراد');}});
 document.getElementById('employeeForm').addEventListener('submit',async e=>{e.preventDefault();const p={id:Number(document.getElementById('empId').value)||0,employee_no:document.getElementById('empNo').value.trim(),full_name:document.getElementById('empName').value.trim(),nationality:document.getElementById('empNationality').value.trim(),national_id:document.getElementById('empNational').value.trim(),gender:document.getElementById('empGender').value, birth_date:document.getElementById('empBirth').value,marital_status:document.getElementById('empMarital').value,dependents:Number(document.getElementById('empDependents').value)||0,phone:document.getElementById('empPhone').value,email:document.getElementById('empEmail').value,address:document.getElementById('empAddress').value,emergency_phone:document.getElementById('empEmergency').value,company_id:Number(document.getElementById('empCompany').value)||null,branch_id:Number(document.getElementById('empBranch').value)||null,department_id:Number(document.getElementById('empDepartment').value)||null,job_title_id:Number(document.getElementById('empJobTitle').value)||null,job_title:document.getElementById('empJobTitle').selectedOptions[0]?.textContent||'',social_security_no:document.getElementById('empSSN').value,bank_iban:document.getElementById('empIBAN').value,hire_date:document.getElementById('empHire').value,probation_end:document.getElementById('empProbation').value,contract_type:document.getElementById('empContract').value,contract_end:document.getElementById('empContractEnd').value,basic_salary:Number(document.getElementById('empSalary').value)||0,housing_allowance:Number(document.getElementById('empHousing').value)||0,transport_allowance:Number(document.getElementById('empTransport').value)||0,other_allowances:Number(document.getElementById('empOtherAllowances').value)||0,status:document.getElementById('empStatus').value,termination_date:document.getElementById('empTerminationDate').value,termination_reason:document.getElementById('empTerminationReason').value};if(!p.employee_no||!p.full_name){toast('الرقم الوظيفي والاسم مطلوبان');return;}let r;if(p.id)r=await window.hrpro.employees.update(p);else r=await window.hrpro.employees.add({...p,token:state.user?.token});if(!r.ok){toast(r.message||'تعذر حفظ الموظف');return;}document.getElementById('employeeModal').style.display='none';await loadEmployees();toast(p.id?'تم تحديث ملف الموظف':'تمت إضافة الموظف بنجاح');});
 
@@ -419,7 +453,8 @@ function money(v){return Number(v||0).toLocaleString('ar-JO',{minimumFractionDig
 async function loadPayrollRuns(){
   const box=document.getElementById('payrollRuns'); if(!box||!window.hrpro.payroll)return;
   const runs=await window.hrpro.payroll.runs();
-  box.innerHTML=runs.length?runs.slice(0,8).map(r=>`<div class="activity-item"><div class="activity-dot"></div><div style="flex:1"><strong>${safe(r.period)}</strong><div>${money(r.net)} د.أ • ${safe(r.status)}</div></div><span class="status ${r.status==='locked'?'success':r.status==='calculated'?'accent':'warn'}">${safe(r.status)}</span></div>`).join(''):'<div class="muted">لا توجد مسيرات محفوظة.</div>';
+  box.innerHTML=runs.length?runs.slice(0,8).map(r=>`<div class="activity-item"><div class="activity-dot"></div><div style="flex:1"><strong>${safe(r.period)}</strong><div>${money(r.net)} د.أ • ${safe(r.status)}</div></div><span class="status ${r.status==='locked'?'success':r.status==='calculated'?'accent':'warn'}">${safe(r.status)}</span><button class="btn" style="margin-inline-start:8px" data-slip-run="${r.id}">كشوف</button></div>`).join(''):'<div class="muted">لا توجد مسيرات محفوظة.</div>';
+  box.querySelectorAll('[data-slip-run]').forEach(b=>b.addEventListener('click',()=>{const emp=prompt('معرّف الموظف لطباعة كشف راتبه (اتركه فارغًا للموظف الأول)','')||'';window.__hrproPrintPayslip&&window.__hrproPrintPayslip(Number(b.dataset.slipRun),emp?Number(emp):null);}));
 }
 async function loadPayrollComponents(){
   const box=document.getElementById('payrollComponents'); if(!box||!window.hrpro.payroll)return;
@@ -440,15 +475,15 @@ async function showPayrollSettings(){
   };
 }
 async function runPayroll(){
-  const period=document.getElementById('payrollPeriod').value; const r=await window.hrpro.payroll.run({period,username:'admin'});
+  const period=document.getElementById('payrollPeriod').value; const r=await window.hrpro.payroll.run({period,token:state.user?.token,username:state.user?.username||'admin'});
   if(!r.ok){toast(r.message||'تعذر تشغيل المسير');return;}
   document.getElementById('pmGross').textContent=money(r.summary.gross);document.getElementById('pmSS').textContent=money(r.summary.employee_ss);document.getElementById('pmTax').textContent=money(r.summary.tax);document.getElementById('pmDed').textContent=money(r.summary.deductions);document.getElementById('pmNet').textContent=money(r.summary.net);
   document.getElementById('payrollStatus').textContent=`تم احتساب ${r.summary.employees} موظفًا للفترة ${period}. الحالة: calculated`;
   document.getElementById('payrollBody').innerHTML=r.items.map(x=>`<tr><td><strong>${safe(x.full_name)}</strong><div class="muted">${safe(x.employee_no)}</div></td><td>${money(x.basic)}</td><td>${money(x.allowances)}</td><td>${money(x.overtime)}</td><td>${money(x.bonuses)}</td><td>${money(x.absence_deduction+x.other_deductions)}</td><td>${money(x.employee_ss)}</td><td>${money(x.tax)}</td><td>${money(x.net)}</td><td><span class="status success">محسوب</span></td></tr>`).join('');
   await loadPayrollRuns(); toast('تم تشغيل مسير الرواتب بنجاح');
 }
-async function lockPayroll(){const runs=await window.hrpro.payroll.runs();const period=document.getElementById('payrollPeriod').value;const run=runs.find(x=>x.period===period);if(!run){toast('شغّل المسير أولًا');return;}const r=await window.hrpro.payroll.lock({runId:run.id,username:'admin'});toast(r.ok?'تم قفل المسير':'تعذر قفل المسير');loadPayrollRuns();}
-async function unlockPayroll(){const runs=await window.hrpro.payroll.runs();const period=document.getElementById('payrollPeriod').value;const run=runs.find(x=>x.period===period);if(!run){toast('لا يوجد مسير لهذه الفترة');return;}const r=await window.hrpro.payroll.unlock({runId:run.id,username:'admin'});toast(r.ok?'تمت إعادة فتح المسير':'تعذر إعادة الفتح');loadPayrollRuns();}
+async function lockPayroll(){const runs=await window.hrpro.payroll.runs();const period=document.getElementById('payrollPeriod').value;const run=runs.find(x=>x.period===period);if(!run){toast('شغّل المسير أولًا');return;}const r=await window.hrpro.payroll.lock({runId:run.id,token:state.user?.token,username:state.user?.username||'admin'});toast(r.ok?'تم قفل المسير':'تعذر قفل المسير');loadPayrollRuns();}
+async function unlockPayroll(){const runs=await window.hrpro.payroll.runs();const period=document.getElementById('payrollPeriod').value;const run=runs.find(x=>x.period===period);if(!run){toast('لا يوجد مسير لهذه الفترة');return;}const r=await window.hrpro.payroll.unlock({runId:run.id,token:state.user?.token,username:state.user?.username||'admin'});toast(r.ok?'تمت إعادة فتح المسير':'تعذر إعادة الفتح');loadPayrollRuns();}
 document.getElementById('payrollRunBtn')?.addEventListener('click',runPayroll);
 document.getElementById('payrollLockBtn')?.addEventListener('click',lockPayroll);
 document.getElementById('payrollUnlockBtn')?.addEventListener('click',unlockPayroll);
@@ -456,6 +491,7 @@ document.getElementById('payrollSettingsBtn')?.addEventListener('click',showPayr
 loadPayrollComponents().catch(()=>{});loadPayrollRuns().catch(()=>{});
 
 loadEmployeeLookups().then(loadEmployees).catch(()=>{});
+async function initStage3(){ /* legacy hook retained for compatibility with earlier stages */ }
 initStage3().catch(()=>{});
 initAuth();
 </script>
@@ -579,17 +615,20 @@ function hrp5Notice(msg){
     <div class="panel">
       <div class="panel-head"><h3>مركز التقارير</h3><span class="muted">جاهز للطباعة والتصدير</span></div>
       <div class="quick">
-        <button onclick="hrp6Notice('كشف الموظفين')">كشف الموظفين</button>
-        <button onclick="hrp6Notice('تقرير الحضور الشهري')">الحضور الشهري</button>
-        <button onclick="hrp6Notice('كشف أرصدة الإجازات')">أرصدة الإجازات</button>
-        <button onclick="hrp6Notice('مسير الرواتب')">مسير الرواتب</button>
-        <button onclick="hrp6Notice('كشف البنك')">كشف البنك</button>
-        <button onclick="hrp6Notice('الضمان الاجتماعي')">تقرير الضمان</button>
-        <button onclick="hrp6Notice('ضريبة الدخل')">تقرير الضريبة</button>
-        <button onclick="hrp6Notice('السلف والخصومات')">السلف والخصومات</button>
-        <button onclick="hrp6Notice('تسويات نهاية الخدمة')">التسويات</button>
-        <button onclick="hrp6Notice('سجل التدقيق')">Audit Log</button>
+        <button data-report="employees">كشف الموظفين</button>
+        <button data-report="attendance">تقرير الحضور</button>
+        <button data-report="leaves">تقرير الإجازات</button>
+        <button data-report="leave_balances">أرصدة الإجازات</button>
+        <button data-report="payroll">مسير الرواتب</button>
+        <button data-report="loans">السلف</button>
+        <button data-report="deductions">الخصومات</button>
+        <button data-report="settlements">تسويات نهاية الخدمة</button>
+        <button data-report="documents">الوثائق وانتهاء صلاحيتها</button>
+        <button data-report="contracts">العقود</button>
+        <button data-report="departments">أقسام وشواغل</button>
+        <button data-report="audit">Audit Log</button>
       </div>
+      <div id="reportOutput" style="margin-top:12px"></div>
     </div>
     <div class="panel">
       <div class="panel-head"><h3>التصدير</h3><span class="muted">حسب الصلاحية</span></div>
@@ -845,10 +884,10 @@ function hrp8Approve(id){hrp8Notice("فتح مراجعة "+id+" — يمكن ا�
     <div class="setting-card"><h4>قاعدة البيانات</h4><p>تحديد نوع المحرك ومكان قاعدة البيانات واتصال الخادم.</p><select style="width:100%;padding:9px;border:1px solid var(--line);border-radius:9px"><option>Local Database</option><option>PostgreSQL</option><option>SQL Server</option></select></div>
     <div class="setting-card"><h4>الخادم</h4><p>عنوان الخادم والمنفذ والاتصال المشفر وحالة الخدمة.</p><input value="192.168.1.10" style="width:100%;padding:9px;border:1px solid var(--line);border-radius:9px"><div class="switch-row"><span>SSL / TLS</span><label class="switch"><input type="checkbox" checked><span class="slider"></span></label></div></div>
     <div class="setting-card"><h4>الجلسات</h4><p>مهلة الجلسة، تسجيل الدخول المتعدد، وقفل المستخدم الخامل.</p><div class="switch-row"><span>تسجيل خروج خامل</span><label class="switch"><input type="checkbox" checked><span class="slider"></span></label></div></div>
-    <div class="setting-card"><h4>النسخ الاحتياطي</h4><p>نسخ يومي، أسبوعي، قبل مسير الرواتب، والاحتفاظ بعدد محدد من النسخ.</p><button class="btn" onclick="hrp9Notice('إنشاء Backup')">Backup الآن</button></div>
-    <div class="setting-card"><h4>الاستعادة</h4><p>استعادة قاعدة البيانات مع التحقق من الإصدار وسلامة الملف.</p><button class="btn" onclick="hrp9Notice('فتح Restore')">استعادة</button></div>
+    <div class="setting-card"><h4>النسخ الاحتياطي</h4><p>نسخة يومية تلقائية (قابلة للتفعيل من الإعدادات)، نسخ يدوي، قائمة نسخ، وفحص سلامة لكل نسخة.</p><button class="btn" id="hrp9BackupBtn">Backup الآن</button><button class="btn" id="hrp9AutoBackupBtn" style="margin-top:7px">تفعيل/تعطيل النسخ التلقائي</button></div>
+    <div class="setting-card"><h4>الاستعادة</h4><p>استعادة قاعدة البيانات من نسخة سليمة — تفحص سلامة الملف أولًا، تنشئ نسخة أمان قبل الاستبدال، وتُنهي كل الجلسات.</p><button class="btn" id="hrp9RestoreBtn">استعادة</button></div>
     <div class="setting-card"><h4>نسخة خارجية</h4><p>مسار احتياطي محلي أو شبكة أو خدمة تخزين في النسخة النهائية.</p><div class="switch-row"><span>تمكين النسخ الخارجي</span><label class="switch"><input type="checkbox"><span class="slider"></span></label></div></div>
-    <div class="setting-card"><h4>تدقيق السلامة</h4><p>فحص سلامة النسخة وقاعدة البيانات قبل الاستعادة.</p><button class="btn" onclick="hrp9Notice('فحص السلامة')">فحص</button></div>
+    <div class="setting-card"><h4>تدقيق السلامة</h4><p>قائمة النسخ المحفوظة مع فحص سلامة كل ملف (فتح قاعدة SQLite والتحقق من الجداول المطلوبة).</p><button class="btn" id="hrp9ListBtn">فحص النسخ</button></div>
     <div class="setting-card"><h4>ترخيص المنتج</h4><p>تهيئة بيئة الترخيص لنسخ Production / Professional / Enterprise.</p><button class="btn" id="licenseInstallBtn">إدارة الترخيص</button></div>
   </div>
 
@@ -1064,6 +1103,8 @@ function hrp9Notice(msg){const e=document.getElementById("hrp9-toast");if(!e)ret
       };
 
       const login=async()=>{
+        if(login.__inFlight)return;
+        login.__inFlight=true;
         show('');
         const username=(user.value||'').trim();
         const password=pass.value||'';
@@ -1083,6 +1124,9 @@ function hrp9Notice(msg){const e=document.getElementById("hrp9-toast");if(!e)ret
           console.log('[HR PRO] login result',result);
 
           if(result && result.ok){
+            window.state=window.state||{user:null,roleId:null,roles:[],permissions:[]};
+            window.state.user={...result.user,token:result.token};
+            try{ localStorage.setItem('hrpro_token',result.token||''); }catch(e){ console.warn('token persistence skipped',e); }
             gate.style.display='none';
             const name=document.querySelector('.profile strong');
             const role=document.querySelector('.profile .muted');
@@ -1090,6 +1134,14 @@ function hrp9Notice(msg){const e=document.getElementById("hrp9-toast");if(!e)ret
             if(role) role.textContent=result.user?.role||'User';
             if(typeof window.toast==='function') window.toast('تم تسجيل الدخول بنجاح');
             else console.log('[HR PRO] login success');
+            try{
+              if(typeof loadRoles==='function') loadRoles().catch(err=>console.error('loadRoles:',err));
+              if(typeof loadEmployees==='function') loadEmployees().catch(err=>console.error('loadEmployees:',err));
+              if(typeof loadPayrollRuns==='function') loadPayrollRuns().catch(err=>console.error('loadPayrollRuns:',err));
+              if(typeof loadPayrollComponents==='function') loadPayrollComponents().catch(err=>console.error('loadPayrollComponents:',err));
+              if(typeof window.refreshDashboardMetrics==='function') window.refreshDashboardMetrics();
+            }catch(refreshErr){ console.error('post-login refresh failed',refreshErr); }
+            if(result.mustChangePassword){ try{ if(typeof window.openChangePassword==='function') window.openChangePassword(true); else toast('يجب تغيير كلمة المرور من شاشة الإعدادات'); }catch(e){ console.error('forced password change prompt failed',e); } }
             return;
           }
 
@@ -1098,6 +1150,7 @@ function hrp9Notice(msg){const e=document.getElementById("hrp9-toast");if(!e)ret
           console.error('[HR PRO] login error',e);
           show('خطأ أثناء تسجيل الدخول: '+(e?.message||'خطأ غير معروف'));
         }finally{
+          login.__inFlight=false;
           btn.disabled=false;
           btn.textContent='دخول آمن';
         }
@@ -1118,6 +1171,8 @@ function hrp9Notice(msg){const e=document.getElementById("hrp9-toast");if(!e)ret
 
       // Expose for manual console/debug testing.
       window.hrproLogin=login;
+      const ready=document.getElementById('loginReady');
+      if(ready){ ready.textContent='جاهز — أدخل بيانات الدخول'; ready.style.color='#257b5a'; }
       console.log('[HR PRO] login bootstrap ready');
       return true;
     }catch(e){
@@ -1144,14 +1199,14 @@ function hrp9Notice(msg){const e=document.getElementById("hrp9-toast");if(!e)ret
   document.getElementById('reportExcelBtn')?.addEventListener('click',async()=>{const d=tableData();if(!d)return msg('افتح تقريرًا يحتوي على جدول أولًا');try{const r=await window.hrpro.reports.excel({token:state.user?.token,...d});if(r?.ok)msg('تم إنشاء ملف Excel فعليًا');else if(!r?.canceled)msg(r?.message||'تعذر إنشاء Excel');}catch(e){msg(e.message||'تعذر إنشاء Excel');}});
 document.getElementById('stage6PdfBtn')?.addEventListener('click',()=>document.getElementById('reportPdfBtn')?.click()); document.getElementById('stage6ExcelBtn')?.addEventListener('click',()=>document.getElementById('reportExcelBtn')?.click()); document.getElementById('stage6CsvBtn')?.addEventListener('click',async()=>{const table=document.querySelector('.page.active table');if(!table){toast('لا يوجد جدول لتصديره');return;}const columns=[...table.querySelectorAll('thead th')].map((x,i)=>({key:'c'+i,label:x.textContent.trim()}));const rows=[...table.querySelectorAll('tbody tr')].map(tr=>Object.fromEntries([...tr.children].map((td,i)=>['c'+i,td.innerText.trim()])));try{const r=await window.hrpro.reports.csv({token:state.user?.token,columns,rows});if(r?.ok)toast('تم إنشاء CSV فعليًا');}catch(e){toast(e.message||'تعذر إنشاء CSV');}});
   document.getElementById('backupNowBtn')?.addEventListener('click',async()=>{try{const r=await window.hrpro.backup.create(state.user?.token);if(r?.ok)msg('تم إنشاء النسخة الاحتياطية');else if(!r?.canceled)msg(r?.message||'تعذر إنشاء النسخة');}catch(e){msg(e.message||'تعذر إنشاء النسخة');}});
-  document.getElementById('restoreNowBtn')?.addEventListener('click',async()=>{try{const r=await window.hrpro.backup.restore(state.user?.token);if(r?.ok){alert('تمت الاستعادة بنجاح. سيتم إعادة تشغيل البرنامج.');location.reload();}else if(!r?.canceled)msg(r?.message||'تعذر الاستعادة');}catch(e){msg(e.message||'تعذر الاستعادة');}});
+  document.getElementById('restoreNowBtn')?.addEventListener('click',async()=>{try{if(!window.confirm('تحذير: الاستعادة تستبدل قاعدة البيانات الحالية وتنهي كل الجلسات. متابعة؟'))return;const r=await window.hrpro.backup.restore(state.user?.token);if(r?.ok){window.alert('تمت الاستعادة بنجاح. سيتم إعادة تشغيل البرنامج.');location.reload();}else if(!r?.canceled)msg(r?.message||'تعذر الاستعادة');}catch(e){msg(e.message||'تعذر الاستعادة');}});
 })();
 </script>
 
 <script>
 /* HRPRO 1.4.1 PRODUCTION ACTION CENTER */
 (function(){
-  const handledIds=new Set(['loginBtn','newEmployeeBtn','employeeCancelBtn','employeeForm','payrollRunBtn','payrollLockBtn','payrollUnlockBtn','payrollSettingsBtn','addUserBtn','savePermBtn','qaRunBtn','actionModalOk','actionModalCancel','savePayrollSettings','appModalClose']);
+  const handledIds=new Set(['loginBtn','newEmployeeBtn','employeeCancelBtn','employeeForm','payrollRunBtn','payrollLockBtn','payrollUnlockBtn','payrollSettingsBtn','addUserBtn','savePermBtn','qaRunBtn','actionModalOk','actionModalCancel','savePayrollSettings','appModalClose','logoutBtn','notifBell']);
   const navTexts=new Map([
     ['إدارة القواعد','legal'],['إدارة الضمان','legal'],['إدارة الضريبة','legal'],['تعديل القاعدة','legal'],['إدارة الإجازات','legal'],['إدارة الدوام','attendance'],
     ['إعداد الاتصال','attendance'],['إعداد الطباعة','reports'],['قالب الطباعة','reports'],['تخصيص القالب','reports'],['إدارة الترخيص','settings'],['اختبار الاتصال','attendance'],
@@ -1164,7 +1219,7 @@ document.getElementById('stage6PdfBtn')?.addEventListener('click',()=>document.g
   document.getElementById('appModalClose')?.addEventListener('click',close);
   document.getElementById('appModal')?.addEventListener('click',e=>{if(e.target.id==='appModal')close();});
   function go(id){const b=document.querySelector('.nav button[data-page="'+id+'"]');if(b){b.click();return true;}const p=document.getElementById(id);if(p){document.querySelectorAll('.page').forEach(x=>x.classList.remove('active'));p.classList.add('active');return true;}return false;}
-  async function health(){try{const h=await window.hrpro.health();document.getElementById('demoDb').textContent=h?.ok?'OK':'FAIL';show('فحص النظام',h?.ok?'قاعدة البيانات وخدمة Electron تعملان.':'فشل فحص قاعدة البيانات.',`<div class="status ${h?.ok?'success':'danger'}">${h?.ok?'PASS':'FAIL'}</div>`);}catch(e){document.getElementById('demoDb').textContent='FAIL';show('فحص النظام','تعذر تنفيذ فحص الصحة',String(e.message||e));}}
+  async function health(){try{const h=await window.hrpro.health();const dbEl=document.getElementById('demoDb');if(dbEl)dbEl.textContent=h?.ok?'OK':'FAIL';show('فحص النظام',h?.ok?'قاعدة البيانات وخدمة Electron تعملان.':'فشل فحص قاعدة البيانات.',`<div class="status ${h?.ok?'success':'danger'}">${h?.ok?'PASS':'FAIL'}</div>`);}catch(e){document.getElementById('demoDb').textContent='FAIL';show('فحص النظام','تعذر تنفيذ فحص الصحة',String(e.message||e));}}
   async function backup(){try{const r=await window.hrpro.backup.create(state.user?.token);if(r?.ok)show('نسخة احتياطية','تم إنشاء النسخة الاحتياطية بنجاح',`<div class="status success">تم الحفظ</div><p class="muted" style="margin-top:8px;direction:ltr">${r.filePath||''}</p>`);else toast('تم إلغاء النسخ الاحتياطي');}catch(e){show('النسخ الاحتياطي','حدث خطأ أثناء إنشاء النسخة',`<div class="status danger">${String(e.message||e)}</div>`);}}
   async function act(kind){
     if(kind==='employee'){go('employees');document.getElementById('newEmployeeBtn')?.click();return;}
@@ -1178,13 +1233,108 @@ document.getElementById('stage6PdfBtn')?.addEventListener('click',()=>document.g
   }
   document.querySelectorAll('[data-action]').forEach(b=>b.addEventListener('click',()=>act(b.dataset.demoAction)));
 
+  // hrp5 settlements: real list/approve/new wiring
+  const money2=(v)=>{try{return (typeof money==='function'?money(v):Number(v||0).toFixed(2));}catch(e){return String(v);}};
+  document.getElementById('settlementNewBtn')?.addEventListener('click',()=>document.getElementById('settlementCalcBtn')?.click());
+  document.getElementById('settlementViewBtn')?.addEventListener('click',async()=>{
+    try{
+      const rows=await window.hrpro.settlements.list(state.user?.token);
+      const net=x=>money2((x.calculation&&x.calculation.net)||x.net||0);
+      show('كشوف التسوية النهائية',rows.length?rows.length+' تسوية مسجلة':'لا توجد تسويات بعد','<div class="table-wrap"><table class="table"><thead><tr><th>الموظف</th><th>تاريخ الانتهاء</th><th>السبب</th><th>الصافي (د.أ)</th><th>الحالة</th></tr></thead><tbody>'+(rows.map(x=>'<tr><td>'+safe(x.full_name||x.employee_no||x.employee_id||'')+'</td><td>'+safe(x.termination_date||'')+'</td><td>'+safe(x.reason||'')+'</td><td>'+net(x)+'</td><td>'+safe(x.status||'draft')+'</td></tr>').join('')||'<tr><td colspan="5">لا توجد تسويات</td></tr>')+'</tbody></table></div>');
+    }catch(e){ toast(e.message||'تعذر تحميل التسويات'); }
+  });
+  document.getElementById('settlementApproveBtn')?.addEventListener('click',async()=>{
+    try{
+      const rows=await window.hrpro.settlements.list(state.user?.token);
+      const pending=rows.filter(x=>(x.status||'')!=='approved');
+      if(!pending.length){toast('لا توجد تسويات بانتظار الاعتماد');return;}
+      show('اعتماد التسويات',pending.length+' تسوية بانتظار الاعتماد','<div class="table-wrap"><table class="table"><thead><tr><th>الموظف</th><th>الصافي (د.أ)</th><th></th></tr></thead><tbody>'+pending.map(x=>'<tr><td>'+safe(x.full_name||x.employee_no||x.employee_id||'')+'</td><td>'+money2((x.calculation&&x.calculation.net)||x.net||0)+'</td><td><button class="btn primary" data-apset="'+x.id+'">اعتماد</button></td></tr>').join('')+'</tbody></table></div>');
+      document.querySelectorAll('[data-apset]').forEach(b=>b.addEventListener('click',async()=>{
+        try{const r=await window.hrpro.settlements.approve({token:state.user?.token,id:Number(b.dataset.apset)});if(!r||!r.ok)throw new Error(r&&r.message||'تعذر الاعتماد');toast('تم اعتماد التسوية');b.closest('tr')&&b.closest('tr').remove();}
+        catch(err){toast(err.message||String(err));}
+      }));
+    }catch(e){ toast(e.message||'تعذر تحميل التسويات'); }
+  });
+
+  // License: real status + file-based install
+  document.getElementById('licenseInstallBtn')?.addEventListener('click',async()=>{
+    try{
+      const st=await window.hrpro.license.status();
+      const badge=st&&st.ok?'<div class="status success">مرخّص — '+safe(st.plan||'STANDARD')+(st.expiresAt?(' حتى '+safe(st.expiresAt)):'')+'</div>':'<div class="status warn">غير مرخّص ('+safe(st&&st.reason||'LICENSE_MISSING')+')</div>';
+      show('إدارة الترخيص',st&&st.ok?'المنتج مرخّص ويعمل.':'يلزم تثبيت ملف ترخيص موقّع (license.json).',badge+'<div class="quick" style="margin-top:12px"><button class="btn primary" id="licensePickBtn">تثبيت ملف ترخيص…</button></div>');
+      document.getElementById('licensePickBtn')&&document.getElementById('licensePickBtn').addEventListener('click',async()=>{
+        try{const r=await window.hrpro.license.install({token:state.user&&state.user.token});if(r&&r.ok){toast('تم تثبيت الترخيص بنجاح');document.getElementById('licenseInstallBtn').click();}else if(!r||!r.canceled)toast(r&&r.message||'تعذر تثبيت الترخيص');}
+        catch(e){toast(e.message||String(e));}
+      });
+    }catch(e){ show('إدارة الترخيص','تعذر قراءة حالة الترخيص',String(e&&e.message||e)); }
+  });
+
+  // Logout
+  document.getElementById('logoutBtn')&&document.getElementById('logoutBtn').addEventListener('click',async()=>{
+    try{ await window.hrpro.logout(); }catch(e){ console.error('logout failed',e); }
+    try{ localStorage.removeItem('hrpro_token'); }catch(e){}
+    location.reload();
+  });
+
+  // Change password (self-service + forced first-time change)
+  window.openChangePassword=function(firstTime){
+    const m=document.getElementById('appModal'); if(!m)return;
+    document.getElementById('appModalTitle').textContent='تغيير كلمة المرور';
+    document.getElementById('appModalText').textContent=firstTime?'يجب تعيين كلمة مرور جديدة قبل المتابعة (8 أحرف على الأقل مع رقم وحرف لاتيني).':'اختر كلمة مرور جديدة قوية (8 أحرف على الأقل مع رقم وحرف لاتيني).';
+    document.getElementById('appModalBody').innerHTML='<div class="action-form"><div class="full"><label>كلمة المرور الحالية</label><input id="cpCur" type="password" autocomplete="current-password"></div><div><label>كلمة المرور الجديدة</label><input id="cpNew" type="password" autocomplete="new-password"></div><div><label>تأكيد كلمة المرور</label><input id="cpNew2" type="password" autocomplete="new-password"></div></div>';
+    const actions=m.querySelector('.modal-actions');
+    actions.innerHTML='<button class="btn primary" type="button" id="cpSave">تحديث كلمة المرور</button>'+(firstTime?'':'<button class="btn" type="button" id="cpCancel">إلغاء</button>');
+    m.style.display='flex';
+    document.getElementById('cpSave').onclick=async()=>{
+      try{
+        const cur=document.getElementById('cpCur').value,nw=document.getElementById('cpNew').value,nw2=document.getElementById('cpNew2').value;
+        if(nw!==nw2)throw new Error('كلمتا المرور غير متطابقتين');
+        const r=await window.hrpro.changePassword({token:state.user&&state.user.token,currentPassword:cur,newPassword:nw});
+        if(!r||!r.ok)throw new Error(r&&r.message||'تعذر تغيير كلمة المرور');
+        m.style.display='none';
+        toast(firstTime?'تم تعيين كلمة المرور. سيتم تسجيل الخروج لتسجيل الدخول بالكلمة الجديدة.':'تم تغيير كلمة المرور بنجاح');
+        if(firstTime){ setTimeout(async()=>{ try{ await window.hrpro.logout(); }catch(e){ console.error('logout after password change failed',e); } location.reload(); },1200); }
+      }catch(e){ toast(e.message||String(e)); }
+    };
+    const cancelBtn=document.getElementById('cpCancel'); if(cancelBtn)cancelBtn.onclick=()=>{m.style.display='none';};
+  };
+  const settingsGrid=document.querySelector('#settings .settings-grid');
+  if(settingsGrid&&!document.getElementById('securityCard')){
+    const card=document.createElement('div'); card.className='setting-card'; card.id='securityCard';
+    card.innerHTML='<h4>الأمان</h4><p>تغيير كلمة مرور حسابك الحالي دون إعادة تشغيل البرنامج، مع تسجيل العملية في سجل التدقيق.</p><button class="btn" id="changePwBtn">تغيير كلمة المرور</button>';
+    settingsGrid.appendChild(card);
+    card.querySelector('#changePwBtn').addEventListener('click',()=>window.openChangePassword(false));
+  }
+
+  // Dashboard metrics from real data
+  async function loadDashboardMetrics(){
+    const set=(id,v)=>{const el=document.getElementById(id);if(el)el.textContent=v;};
+    try{
+      const emps=await window.hrpro.employees.list(state.user&&state.user.token);
+      set('mEmployees',String(emps.length));
+      set('mActive',String(emps.filter(e=>e.status==='active').length));
+      try{
+        const runs=await window.hrpro.payroll.runs(state.user&&state.user.token);
+        if(runs&&runs.length){ set('mPayroll',money2(runs[0].net)); set('mPayrollPeriod','د.أ — '+(runs[0].period||'')); }
+      }catch(e){ console.error('payroll metric failed',e); }
+      try{
+        const leaves=await window.hrpro.leaveRequests.list({token:state.user&&state.user.token});
+        set('mPending',String(leaves.filter(x=>x.status==='pending').length));
+      }catch(e){ console.error('leave metric failed',e); }
+      const soon=emps.filter(e=>{const t=e.contract_end?Date.parse(e.contract_end):0;if(!t)return false;const d=(t-Date.now())/86400000;return d>=0&&d<=30;}).length;
+      set('mContracts',String(soon));
+    }catch(e){ console.error('dashboard metrics failed',e); }
+  }
+  window.refreshDashboardMetrics=loadDashboardMetrics;
+  loadDashboardMetrics();
+
   // Turn every previously unhandled visual button into a useful action.
   const buttons=[...document.querySelectorAll('button')];
   buttons.forEach(btn=>{
     if(handledIds.has(btn.id) || btn.dataset.page || btn.dataset.demoAction || btn.getAttribute('onclick')) return;
     const text=(btn.textContent||'').replace(/\s+/g,' ').trim();
     if(!text) return;
-    if(text==='استعادة'){ btn.addEventListener('click',async()=>{try{const r=await window.hrpro.backup.restore(state.user?.token); if(r?.ok){alert('تمت الاستعادة بنجاح. سيتم تسجيل الخروج لإعادة تحميل الجلسة.'); location.reload();} else if(!r?.canceled) show('استعادة قاعدة البيانات','تعذر الاستعادة',`<div class="status danger">${safe(r?.message||'فشل غير معروف')}</div>`);}catch(e){show('استعادة قاعدة البيانات','تعذر الاستعادة',`<div class="status danger">${safe(e.message||e)}</div>`);}}); return; }
+    if(text==='استعادة'){ btn.addEventListener('click',async()=>{try{if(!window.confirm('تحذير: الاستعادة تستبدل قاعدة البيانات الحالية وتنهي كل الجلسات. متابعة؟'))return;const r=await window.hrpro.backup.restore(state.user?.token); if(r?.ok){window.alert('تمت الاستعادة بنجاح. سيتم تسجيل الخروج لإعادة تحميل الجلسة.'); location.reload();} else if(!r?.canceled) show('استعادة قاعدة البيانات','تعذر الاستعادة',`<div class="status danger">${safe(r?.message||'فشل غير معروف')}</div>`);}catch(e){show('استعادة قاعدة البيانات','تعذر الاستعادة',`<div class="status danger">${safe(e.message||e)}</div>`);}}); return; }
     const target=[...navTexts.entries()].find(([k])=>text.includes(k));
     if(target){btn.addEventListener('click',()=>go(target[1]));return;}
     if(text.includes('سلفة جديدة') || text.includes('خصم جديد')){ btn.addEventListener('click',()=>go('loans')); return; }
@@ -1319,12 +1469,18 @@ document.getElementById('stage6PdfBtn')?.addEventListener('click',()=>document.g
   // Legal rules: all cards open an editable, persistent rule record.
   document.querySelectorAll('#legal .setting-card button').forEach(btn=>btn.onclick=async()=>{const title=btn.closest('.setting-card').querySelector('h4').textContent;const key='legal_'+title;const old=await setting(key);modalForm(title,`<div class="field"><label>نسخة القاعدة / القيمة</label><input id="legalValue" value="${safeText(old)}" placeholder="أدخل القيمة المعتمدة"></div><p class="muted" style="margin-top:10px">احفظ القيمة وتظهر كإعداد فعلي داخل قاعدة النظام.</p>`,async()=>saveSetting(key,$('legalValue').value));});
   // Portal service buttons perform real lookups/requests where APIs exist, otherwise present a usable form.
-  document.querySelectorAll('#portal .quick button').forEach(btn=>btn.onclick=async()=>{
-    const t=btn.textContent.trim();
-    if(t==='كشف الراتب'){const rows=await window.hrpro.payroll.runs();modalForm('كشف الراتب',`<div class="panel"><p>آخر مسيرات الرواتب:</p>${rows.slice(0,6).map(x=>`<div class="activity-item"><strong>${safeText(x.period)}</strong><span>${safeText(x.status)} • ${Number(x.net||0).toFixed(2)} د.أ</span></div>`).join('')||'<p class="muted">لا توجد مسيرات محفوظة.</p>'}`,async()=>{});}
-    else if(t==='رصيد الإجازات') modalForm('رصيد الإجازات',`<div class="field"><label>رقم الموظف</label><input id="portalLeaveNo"></div><p class="muted">سيتم جلب الرصيد بعد تحديد الموظف.</p>`,async()=>{const es=await window.hrpro.employees.list(tok());const e=es.find(x=>String(x.employee_no)===$('portalLeaveNo').value);if(!e)throw new Error('الموظف غير موجود');const b=await window.hrpro.leaveBalances.list({year:new Date().getFullYear(),employeeId:e.id});toast(b.map(x=>`${x.leave_type}: ${x.balance}`).join(' | ')||'لا يوجد رصيد مسجل');});
-    else { modalForm(t,`<div class="form-grid"><div class="field"><label>الطلب</label><input id="portalReq" value="${safeText(t)}"></div><div class="field"><label>التفاصيل</label><input id="portalDetails"></div></div>`,async()=>saveSetting('portal_last_request',JSON.stringify({type:t,details:$('portalDetails').value,at:new Date().toISOString()}))); }
-  });
+  // Portal self-service wired to the real employee-scoped API (window.hrpro.portal.*).
+  const P=()=>window.__HRPRO_PORTAL_TOKEN;
+  const table=(head,rows)=>`<div class="table-wrap"><table class="table"><thead><tr>${head.map(h=>`<th>${h}</th>`).join('')}</tr></thead><tbody>${rows||'<tr><td colspan="9" class="muted">لا توجد بيانات</td></tr>'}</tbody></table></div>`;
+  async function pShow(title,body){const b=document.getElementById('portalData');const t=document.getElementById('portalName');if(t)t.textContent='خدماتي — '+title;if(b)b.innerHTML=body;}
+  document.getElementById('portalSlipsBtn')&&(document.getElementById('portalSlipsBtn').onclick=async()=>{try{const rows=await window.hrpro.portal.payslips(P());pShow('كشوف رواتبي',table(['الفترة','الأساسي','البدلات','إجمالي','الضمان','الضريبة','الخصومات','الصافي','الحالة'],rows.map(x=>`<tr><td>${safeText(x.period)}</td><td>${Number(x.basic||0).toFixed(2)}</td><td>${Number(x.allowances||0).toFixed(2)}</td><td>${Number(x.gross||0).toFixed(2)}</td><td>${Number(x.employee_ss||0).toFixed(2)}</td><td>${Number(x.tax||0).toFixed(2)}</td><td>${Number(x.deductions||0).toFixed(2)}</td><td><strong>${Number(x.net||0).toFixed(2)}</strong></td><td>${safeText(x.status)}</td></tr>`).join('')));}catch(e){toast(e.message||String(e));}});
+  document.getElementById('portalLeaveBalBtn')&&(document.getElementById('portalLeaveBalBtn').onclick=async()=>{try{const me=await window.hrpro.portal.me(P());if(!me.ok)throw new Error(me.message);const year=new Date().getFullYear();const all=await window.hrpro.leaveBalances.list({year,employeeId:me.employee.id});pShow('أرصدة إجازاتي '+year,table(['النوع','الافتتاحي','المستحق','المرحّل','المستخدم','قيد الاعتماد','الرصيد'],all.map(x=>`<tr><td>${safeText(x.leave_type)}</td><td>${x.opening}</td><td>${x.earned}</td><td>${x.carried}</td><td>${x.used}</td><td>${x.pending}</td><td><strong>${x.balance}</strong></td></tr>`).join('')));}catch(e){toast(e.message||String(e));}});
+  document.getElementById('portalMyLeaveBtn')&&(document.getElementById('portalMyLeaveBtn').onclick=async()=>{try{const rows=await window.hrpro.portal.leaveRequests(P());pShow('طلبات إجازتي',table(['النوع','من','إلى','الأيام','الحالة','السبب'],rows.map(x=>`<tr><td>${safeText(x.leave_type)}</td><td>${safeText(x.start_date)}</td><td>${safeText(x.end_date)}</td><td>${x.days}</td><td>${safeText(x.status)}</td><td>${safeText(x.rejection_reason||x.reason||'')}</td>${x.status==='pending'?`<td><button class="btn" data-pcancel="${x.id}">إلغاء</button></td>`:''}</tr>`).join('')));document.querySelectorAll('[data-pcancel]').forEach(b=>b.onclick=async()=>{try{const r=await window.hrpro.leaveRequests.cancel({token:P(),id:Number(b.dataset.pcancel)});if(!r.ok)throw new Error(r.message);toast('تم إلغاء الطلب');document.getElementById('portalMyLeaveBtn').click();}catch(e){toast(e.message||String(e));}});}catch(e){toast(e.message||String(e));}});
+  document.getElementById('portalMyAttBtn')&&(document.getElementById('portalMyAttBtn').onclick=async()=>{try{const rows=await window.hrpro.portal.attendance(P());pShow('حضوري (آخر 120 سجل)',table(['التاريخ','دخول','خروج','تأخير','إضافي','الحالة'],rows.map(x=>`<tr><td>${safeText(x.work_date)}</td><td>${safeText(x.check_in||'—')}</td><td>${safeText(x.check_out||'—')}</td><td>${x.late_minutes||0}</td><td>${x.overtime_minutes||0}</td><td>${safeText(x.status)}</td></tr>`).join('')));}catch(e){toast(e.message||String(e));}});
+  document.getElementById('portalMyDocsBtn')&&(document.getElementById('portalMyDocsBtn').onclick=async()=>{try{const rows=await window.hrpro.portal.documents(P());pShow('وثائقي',table(['النوع','الملف','تاريخ الانتهاء','ملاحظات'],rows.map(x=>`<tr><td>${safeText(x.kind)}</td><td>${safeText(x.file_name||'—')}</td><td>${safeText(x.expiry_date||'—')}</td><td>${safeText(x.notes||'')}</td></tr>`).join('')));}catch(e){toast(e.message||String(e));}});
+  document.getElementById('portalMyLoansBtn')&&(document.getElementById('portalMyLoansBtn').onclick=async()=>{try{const rows=await window.hrpro.portal.loans(P());pShow('سلفي',table(['المبلغ','القسط','المتبقي','تاريخ البداية','الحالة'],rows.map(x=>`<tr><td>${Number(x.amount||0).toFixed(2)}</td><td>${Number(x.installment||0).toFixed(2)}</td><td>${Number(x.remaining||0).toFixed(2)}</td><td>${safeText(x.start_date||'')}</td><td>${safeText(x.status)}</td></tr>`).join('')));}catch(e){toast(e.message||String(e));}});
+  document.getElementById('portalPassBtn')&&(document.getElementById('portalPassBtn').onclick=async()=>{modalForm('تغيير كلمة المرور',`<div class="form-grid"><div class="field"><label>الحالية</label><input id="ppCur" type="password"></div><div class="field"><label>الجديدة (8+ أحرف وحرف ورقم)</label><input id="ppNew" type="password"></div></div>`,async()=>{const r=await window.hrpro.portal.changePassword({token:P(),currentPassword:$('ppCur').value,newPassword:$('ppNew').value});if(!r.ok)throw new Error(r.message);toast('تم تغيير كلمة المرور');});});
+  document.getElementById('portalLeaveReqBtn')&&(document.getElementById('portalLeaveReqBtn').onclick=async()=>{try{const lts=await window.hrpro.leaveTypes.list(P());modalForm('طلب إجازة جديد',`<div class="form-grid"><div class="field"><label>النوع</label><select id="plType">${lts.map(x=>`<option value="${x.id}">${safeText(x.name)}</option>`).join('')}</select></div><div class="field"><label>من</label><input id="plFrom" type="date"></div><div class="field"><label>إلى</label><input id="plTo" type="date"></div><div class="field"><label>عدد الأيام</label><input id="plDays" type="number" step="0.5" min="0.5"></div><div class="field"><label>السبب</label><input id="plReason"></div></div>`,async()=>{const r=await window.hrpro.portal.submitLeave({token:P(),leave_type_id:Number($('plType').value),start_date:$('plFrom').value,end_date:$('plTo').value,days:Number($('plDays').value),reason:$('plReason').value});if(!r.ok)throw new Error(r.message);toast('تم إرسال الطلب — بانتظار الموافقة');});}catch(e){toast(e.message||String(e));}});
   // Remove remaining fake-action fallback completely; unhandled buttons get a functional action center instead.
   document.querySelectorAll('button').forEach(btn=>{
     if(btn.dataset.realBound)return;
@@ -1336,6 +1492,138 @@ document.getElementById('stage6PdfBtn')?.addEventListener('click',()=>document.g
   loadSettings().catch(()=>{});
 })();
 </script>
+
+<script>
+/* HR PRO PHASE 3-7 UI WIRING — report center, fingerprint honesty, backup tools */
+(function(){
+  const T=()=>window.__HRPRO_TOKEN||document.body.dataset.token||window.state?.user?.token||null;
+  const e=v=>String(v??'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+  function msg(t){try{toast(t);}catch(_){try{hrp6Notice(t);}catch(_2){openModal('HR PRO',String(t));}}}
+
+  // ---- Report center: render any reports:data table + export to CSV/Excel/PDF ----
+  const REPORT_LABELS={employees:'كشف الموظفين',attendance:'تقرير الحضور',leaves:'تقرير الإجازات',leave_balances:'أرصدة الإجازات',payroll:'مسير الرواتب',loans:'السلف',deductions:'الخصومات',settlements:'تسويات نهاية الخدمة',documents:'الوثائق',contracts:'العقود',departments:'الأقسام',audit:'سجل التدقيق'};
+  let currentReport=null;
+  function renderReport(kind,rows){
+    const out=document.getElementById('reportOutput'); if(!out) return;
+    if(!rows.length){out.innerHTML='<p class="muted">لا توجد بيانات لهذا التقرير.</p>';currentReport=null;return;}
+    const cols=Object.keys(rows[0]);
+    currentReport={columns:cols.map(c=>({key:c,label:c})),rows:rows.map(r=>{const o={};cols.forEach(c=>o[c]=r[c]==null?'':String(r[c]));return o;})};
+    out.innerHTML=`<h3 style="margin:8px 0">${e(REPORT_LABELS[kind]||kind)} — ${rows.length} سجل</h3>
+      <div class="table-wrap" style="max-height:420px;overflow:auto"><table class="table"><thead><tr>${cols.map(c=>`<th>${e(c)}</th>`).join('')}</tr></thead>
+      <tbody>${rows.slice(0,500).map(r=>`<tr>${cols.map(c=>`<td>${e(r[c])}</td>`).join('')}</tr>`).join('')}</tbody></table></div>
+      <div class="quick" style="margin-top:10px;grid-template-columns:repeat(3,1fr)">
+        <button id="repExpCsv">تصدير CSV</button><button id="repExpXls">تصدير Excel</button><button id="repExpPdf">PDF / طباعة</button></div>`;
+    document.getElementById('repExpCsv').onclick=async()=>{try{const r=await window.hrpro.reports.csv({token:T(),...currentReport});if(r?.ok)msg('تم تصدير CSV');else if(!r?.canceled)msg(r?.message||'تعذر التصدير');}catch(err){msg(err.message)}};
+    document.getElementById('repExpXls').onclick=async()=>{try{const r=await window.hrpro.reports.excel({token:T(),...currentReport});if(r?.ok)msg('تم تصدير Excel');else if(!r?.canceled)msg(r?.message||'تعذر التصدير');}catch(err){msg(err.message)}};
+    document.getElementById('repExpPdf').onclick=async()=>{try{const r=await window.hrpro.reports.pdf(T());if(r?.ok)msg('تم إنشاء PDF');else if(!r?.canceled)msg(r?.message||'تعذر إنشاء PDF');}catch(err){msg(err.message)}};
+  }
+  document.querySelectorAll('#hrp6 [data-report]').forEach(btn=>{
+    btn.addEventListener('click',async()=>{
+      try{
+        const kind=btn.dataset.report;
+        const params={token:T(),kind};
+        if(kind==='attendance'){const f=prompt2('من تاريخ','2026-01-01');if(f==null)return;const t2=prompt2('إلى تاريخ','2026-12-31');if(t2==null)return;params.from=f;params.to=t2;}
+        if(kind==='leaves'){const s=prompt2('حالة الطلب (اتركه فارغًا للكل)','');if(s==null)return;if(s)params.status=s;}
+        if(kind==='payroll'){const p=prompt2('الفترة YYYY-MM (اتركها فارغًا للكل)','');if(p==null)return;if(p)params.period=p;}
+        const rows=await window.hrpro.reportsData(params);
+        renderReport(kind,rows);
+      }catch(err){msg(err.message||String(err));}
+    });
+  });
+  function prompt2(label,def){
+    return window.__hrproAsk?null:prompt(label,def); // replaced below by modal prompt if available
+  }
+
+  // ---- Fingerprint: honest device management + TCP-only test ----
+  document.getElementById('fpTestBtn')?.addEventListener('click',async()=>{
+    try{
+      const ip=window.prompt&&prompt('عنوان IP لجهاز الحضور','192.168.1.201'); if(ip==null)return;
+      const port=window.prompt&&prompt('المنفذ','4370'); if(port==null)return;
+      const r=await window.hrpro.fingerprint.test({token:T(),ip_address:ip,port:Number(port)||4370});
+      openModal('نتيجة اختبار الاتصال (TCP فقط)',(r.ok?'✓ ':'✗ ')+(r.message||'')+'\n\nملاحظة: هذا فحص اتصال شبكي فقط ولا يعني أن مزامنة سجلات البصمة تعمل — مزامنة البصمة غير متاحة في هذا الإصدار وتتطلب SDK مزوّد الجهاز.');
+    }catch(err){msg(err.message||String(err));}
+  });
+  document.getElementById('fpDeviceMgmtBtn')?.addEventListener('click',async()=>{
+    try{
+      const caps=await window.hrpro.fingerprint.capability();
+      const rows=await window.hrpro.fingerprint.list(T());
+      const html=`<p class="muted">${e(caps.message||'')}</p><div class="table-wrap"><table class="table"><thead><tr><th>الاسم</th><th>النوع</th><th>IP</th><th>Port</th><th>آخر مزامنة</th><th></th></tr></thead><tbody>${(rows||[]).map(d=>`<tr><td>${e(d.name)}</td><td>${e(d.device_type||'')}</td><td>${e(d.ip_address||'')}</td><td>${e(d.port||'')}</td><td>${e(d.last_sync||'—')}</td><td><button class="btn" data-fpdel="${d.id}">حذف</button></td></tr>`).join('')||'<tr><td colspan="6" class="muted">لا توجد أجهزة</td></tr>'}</tbody></table></div>
+      <div class="quick" style="margin-top:10px"><button id="fpAddDevice">＋ إضافة جهاز</button></div>
+      <p class="muted" style="margin-top:8px">مزامنة البصمة الفعلية غير مدعومة بعد (تتطلب SDK مزوّد الجهاز) — استخدم استيراد CSV للحضور.</p>`;
+      openModal('إدارة أجهزة الحضور',html);
+      document.getElementById('fpAddDevice')?.addEventListener('click',async()=>{
+        const name=window.prompt&&prompt('اسم الجهاز',''); if(!name)return;
+        const ip=window.prompt&&prompt('IP','192.168.1.201')||'';
+        const port=Number(window.prompt&&prompt('Port','4370')||4370);
+        const r=await window.hrpro.fingerprint.add({token:T(),name,ip_address:ip,port,device_type:'ZKTeco'});
+        if(!r.ok)throw new Error(r.message); msg('تمت إضافة الجهاز');
+      });
+      document.querySelectorAll('[data-fpdel]').forEach(b=>b.addEventListener('click',async()=>{
+        const r=await window.hrpro.fingerprint.del({token:T(),id:Number(b.dataset.fpdel)}); if(!r.ok)throw new Error(r.message); msg('تم حذف الجهاز');
+      }));
+    }catch(err){msg(err.message||String(err));}
+  });
+
+  // ---- hrp9: backup now / auto toggle / restore / list+verify ----
+  document.getElementById('hrp9BackupBtn')?.addEventListener('click',async()=>{
+    try{const r=await window.hrpro.backup.create(T());if(r?.ok)msg('تم إنشاء نسخة احتياطية'+(r.verified?' وتم التحقق من سلامتها':''));else if(!r?.canceled)msg(r?.message||'تعذر إنشاء النسخة');}catch(err){msg(err.message||String(err));}
+  });
+  document.getElementById('hrp9AutoBackupBtn')?.addEventListener('click',async()=>{
+    try{
+      const cfg=await window.hrpro.settings.get(T());
+      const on=(cfg.backup_auto_enabled==='1');
+      await window.hrpro.settings.set({token:T(),key:'backup_auto_enabled',value:on?'0':'1'});
+      msg(on?'تم تعطيل النسخ التلقائي اليومي':'تم تفعيل النسخ التلقائي اليومي (يُنشئ نسخة مرة واحدة كل يوم)');
+    }catch(err){msg(err.message||String(err));}
+  });
+  document.getElementById('hrp9RestoreBtn')?.addEventListener('click',async()=>{
+    try{
+      const c=window.confirm&&confirm('تحذير: الاستعادة تستبدل قاعدة البيانات الحالية بالكامل وتنهي كل الجلسات. سيتم إنشاء نسخة أمان أولًا. هل تريد المتابعة؟');
+      if(!c)return;
+      const r=await window.hrpro.backup.restore(T());
+      if(r?.ok){window.alert&&alert('تمت الاستعادة بنجاح (نسخة أمان: '+r.safetyBackup+'). سيتم إعادة تحميل البرنامج.');location.reload();}
+      else if(!r?.canceled)msg(r?.message||'تعذر الاستعادة');
+    }catch(err){msg(err.message||String(err));}
+  });
+  document.getElementById('hrp9ListBtn')?.addEventListener('click',async()=>{
+    try{
+      const list=await window.hrpro.backup.list(T());
+      const rows=await Promise.all((list||[]).slice(0,30).map(async f=>{const v=await window.hrpro.backup.verify({token:T(),path:f.path});return `<tr><td>${e(f.name)}</td><td>${(f.size/1024).toFixed(0)} KB</td><td>${e(f.modified.slice(0,19).replace('T',' '))}</td><td><span class="status ${v.ok?'success':'danger'}">${v.ok?'سليمة':'تالفة'}</span></td></tr>`;}));
+      openModal('النسخ المحفوظة وفحص السلامة',`<div class="table-wrap"><table class="table"><thead><tr><th>الملف</th><th>الحجم</th><th>آخر تعديل</th><th>الفحص</th></tr></thead><tbody>${rows.join('')||'<tr><td colspan="4" class="muted">لا توجد نسخ محفوظة</td></tr>'}</tbody></table></div>`);
+    }catch(err){msg(err.message||String(err));}
+  });
+
+  // ---- Payslip print from payroll runs list ----
+  window.__hrproPrintPayslip=async function(runId,employeeId){
+    try{
+      const r=await window.hrpro.payslip.get({token:T(),runId,employeeId});
+      if(!r.ok){msg(r.message||'تعذر جلب كشف الراتب');return;}
+      const p=r.payslip,i=p.item;
+      const win=window.open('','_blank');
+      if(!win){msg('تعذر فتح نافذة الطباعة');return;}
+      win.document.write(`<html dir="rtl"><head><meta charset="utf-8"><title>كشف راتب ${e(i.employee_no)} — ${e(p.period)}</title>
+        <style>body{font-family:Segoe UI,Tahoma,Arial;padding:26px;color:#241d23}h1{font-size:20px;margin:0 0 4px}.muted{color:#8d858d;font-size:11px}table{width:100%;border-collapse:collapse;margin-top:16px}td,th{border:1px solid #e9e1e5;padding:8px;font-size:12px;text-align:right}th{background:#f4eef2}tr.net td{font-weight:900;background:#f9f4f7}</style></head><body>
+        <h1>${e(p.company_name||'HR PRO')}</h1><div class="muted">كشف راتب — الفترة ${e(p.period)} • الحالة ${e(p.status)}</div>
+        <div style="margin-top:10px"><strong>${e(i.full_name)}</strong> (${e(i.employee_no)}) — ${e(i.job_title||'')} • IBAN: ${e(i.bank_iban||'—')}</div>
+        <table><tr><th>البند</th><th>القيمة (د.أ)</th></tr>
+        <tr><td>الراتب الأساسي</td><td>${Number(i.basic||0).toFixed(2)}</td></tr>
+        <tr><td>البدلات</td><td>${Number(i.allowances||0).toFixed(2)}</td></tr>
+        <tr><td>الإضافي</td><td>${Number(i.overtime||0).toFixed(2)}</td></tr>
+        <tr><td>حوافز</td><td>${Number(i.bonuses||0).toFixed(2)}</td></tr>
+        <tr><td>إجمالي الاستحقاقات</td><td>${Number(i.gross||0).toFixed(2)}</td></tr>
+        <tr><td>ضمان اجتماعي (موظف)</td><td>${Number(i.employee_ss||0).toFixed(2)}</td></tr>
+        <tr><td>ضريبة دخل</td><td>${Number(i.tax||0).toFixed(2)}</td></tr>
+        <tr><td>خصم سلف</td><td>${Number(i.loan_deduction||0).toFixed(2)}</td></tr>
+        <tr><td>خصم إجازات بدون راتب (${Number(i.unpaid_leave_days||0)} يوم)</td><td>${Number(i.unpaid_leave_deduction||0).toFixed(2)}</td></tr>
+        <tr><td>خصومات أخرى / غياب</td><td>${(Number(i.deductions||0)-Number(i.loan_deduction||0)-Number(i.unpaid_leave_deduction||0)).toFixed(2)}</td></tr>
+        <tr class="net"><td>الصافي</td><td>${Number(i.net||0).toFixed(2)}</td></tr></table>
+        <p class="muted" style="margin-top:14px">ملاحظة: النسب الضريبية ونسب الضمان قيم قابلة للتهيئة ولا تُعد ضمانًا قانونيًا — تحقق من القواعد الرسمية السارية.</p>
+        </body></html>`);
+      win.document.close(); win.focus(); win.print();
+    }catch(err){msg(err.message||String(err));}
+  };
+})();
+</script>
 </body>
 
 <script>
@@ -1343,11 +1631,11 @@ document.getElementById('stage6PdfBtn')?.addEventListener('click',()=>document.g
 (function(){
   const T=()=>window.__HRPRO_TOKEN||document.body.dataset.token||window.state?.user?.token||null;
   const esc=v=>String(v??'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
-  const toast2=t=>typeof toast==='function'?toast(t):alert(t);
+  const toast2=t=>typeof toast==='function'?toast(t):console.warn(t);
   const q=id=>document.getElementById(id);
   function openForm(title, html, save){
     const modal=q('appModal'), titleEl=q('appModalTitle'), text=q('appModalText'), body=q('appModalBody');
-    if(!modal||!titleEl||!body){return alert(title+'\n'+html.replace(/<[^>]+>/g,''));}
+    if(!modal||!titleEl||!body){return console.warn(title+'\n'+html.replace(/<[^>]+>/g,''));}
     titleEl.textContent=title; q('appModalText').textContent='أكمل البيانات ثم اضغط حفظ. سيتم التخزين مباشرة في قاعدة البيانات.'; body.innerHTML=html;
     const actions=modal.querySelector('.modal-actions'); actions.innerHTML='<button class="btn primary" id="__formSave">حفظ</button><button class="btn" id="__formCancel">إلغاء</button>';
     modal.style.display='flex'; q('__formCancel').onclick=()=>modal.style.display='none';
@@ -1404,7 +1692,7 @@ document.getElementById('stage6PdfBtn')?.addEventListener('click',()=>document.g
  const tok=()=>window.__HRPRO_TOKEN||document.body.dataset.token||null;
  function modal(title,html,ok){
   const titleEl=document.getElementById('modalTitle'), text=document.getElementById('modalText'), back=document.getElementById('modalBackdrop');
-  if(!titleEl||!text||!back)return alert(title+'\n'+html.replace(/<[^>]+>/g,''));
+  if(!titleEl||!text||!back)return console.warn(title+'\n'+html.replace(/<[^>]+>/g,''));
   titleEl.textContent=title;text.innerHTML=html;back.style.display='flex';
   const actions=document.querySelector('.modal-actions'); actions.innerHTML='<button class="btn primary" id="prodModalOk">حفظ</button><button class="btn" onclick="closeModal()">إلغاء</button>';
   document.getElementById('prodModalOk').onclick=async()=>{await ok();closeModal();};
